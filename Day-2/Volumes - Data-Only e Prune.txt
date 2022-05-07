@@ -1,0 +1,38 @@
+
+
+
+
+
+
+root@ubuntulab:/var/lib/docker/volumes# docker container prune
+WARNING! This will remove all stopped containers.
+Are you sure you want to continue? [y/N] y
+Deleted Containers:
+a0a12b2871393799fb9c3989412657acf55193c377bc7168afd36afd1b77665d
+e609f8750efe920a4fb9f5a55d6bf5fb708c976c9d780492b651a33e12c9ef5b
+301368ee21d8cff923dd7ad390d1891d5dda592277f6d1cafef1958d690554bf
+8ab14acbd9d0677e0f0da34a971f67a59da4dfdcea672d224dc8859e92ff45e4
+aa58e4779b960261444bb1cc569b8c513faf773b848c0bd5a49f21c2dfbce9d4
+a8d097124584846331f1628e7b62eb40d86d0cd13225ac56fbc49e87567ca052
+ff4d1c9a08f8b27cf9557492d2cfea423acac796631d50d3d403ff3a8f98b5cb
+092235062f05b4145b332af607192bc06afae02e7de3197f4e1cd6fc700964d8
+2d2da19ee1389c3ce9a28eff44d6165b04af971b3db9c7f5ec5064b1186c295c
+e6b6efd2af53177f7ec5d617236b05d56dc7ccd232b4c0f851093179b9f7caf4
+c7460d3884dec3e074bbc648a8765d29ffdbf423de1ed8016e8fc78c497fce8f
+d004871731e4f00f0ae7f70e969f9cd7b816a21d4a3fef3b31a878639651a24a
+411befd227a04ea76665859223bf9175cd7e94fe13f89d9029dd5361d9756653
+
+Total reclaimed space: 20.68MB
+
+
+
+
+root@ubuntulab:/var/lib/docker/volumes# docker volume prune
+WARNING! This will remove all local volumes not used by at least one container.
+Are you sure you want to continue? [y/N] y
+Deleted Volumes:
+6fd802e2552ebd97080212d445058a38e3db67a87ebd0f740d51b2964220ae85
+f50ff38c25046cd0ce15a2a9364cd8db98b20048f65262027e4c412aeea25ba3
+
+Total reclaimed space: 428MB
+root@ubuntulab:/var/lib/docker/volumes#

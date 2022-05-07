@@ -1,0 +1,116 @@
+
+html
+# docker image build -t toskeira:1.0 .
+# docker image ls
+# docker container run -d toskeira:1.0
+# docker container logs -f [CONTAINER ID]
+
+
+No Dockerfile:
+
+FROM debian 
+LABEL app="Giropops" 
+ENV JEFERSON="LINDO" 
+RUN apt-get update && apt-get install -y stress && apt-get clean 
+
+CMD stress --cpu 1 --vm-bytes 64M
+
+
+
+#############################################################################
+#############################################################################
+########### Buildando a imagem
+
+-t   indica a tag, neste caso a tag é toskeira, dois pontos, a versão dela
+.    o ponto indica que o Dockerfile está neste nível
+
+docker image build -t toskeira:1.0 .
+
+
+-Container tava apresentando erro e não ficava up:
+root@ubuntulab:~# docker container logs -f gifted_brown
+stress: FAIL: [8] (244) unrecognized option: --vm1
+root@ubuntulab:~# docker container rm gifted_brown
+gifted_brown
+root@ubuntulab:~#
+
+-Foi necessário remover o parametro --vm1 do Dockerfile, buildar novamente e subir o Container.
+
+
+root@ubuntulab:/curso/descomplicando-o-docker# docker container ls
+CONTAINER ID   IMAGE          COMMAND                  CREATED              STATUS          PORTS     NAMES
+15836568f5d6   toskeira:1.0   "/bin/sh -c 'stress …"   About a minute ago   Up 59 seconds             epic_blackburn
+root@ubuntulab:/curso/descomplicando-o-docker#
+
+
+-Verificando os recursos usando o comando "docker container stats epic_blackburn":
+
+root@ubuntulab:/curso/descomplicando-o-docker# ^C
+root@ubuntulab:/curso/descomplicando-o-docker# docker container stats epic_blackburn
+CONTAINER ID   NAME             CPU %     MEM USAGE / LIMIT     MEM %     NET I/O       BLOCK I/O   PIDS
+15836568f5d6   epic_blackburn   3.30%     1.945MiB / 8.301GiB   0.02%     1.09kB / 0B   0B / 0B     3
+CONTAINER ID   NAME             CPU %     MEM USAGE / LIMIT     MEM %     NET I/O       BLOCK I/O   PIDS
+15836568f5d6   epic_blackburn   3.30%     1.945MiB / 8.301GiB   0.02%     1.09kB / 0B   0B / 0B     3
+CONTAINER ID   NAME             CPU %     MEM USAGE / LIMIT     MEM %     NET I/O       BLOCK I/O   PIDS
+15836568f5d6   epic_blackburn   100.78%   1.945MiB / 8.301GiB   0.02%     1.09kB / 0B   0B / 0B     3
+CONTAINER ID   NAME             CPU %     MEM USAGE / LIMIT     MEM %     NET I/O       BLOCK I/O   PIDS
+15836568f5d6   epic_blackburn   100.78%   1.945MiB / 8.301GiB   0.02%     1.09kB / 0B   0B / 0B     3
+CONTAINER ID   NAME             CPU %     MEM USAGE / LIMIT     MEM %     NET I/O       BLOCK I/O   PIDS
+
+
+
+-Subindo o container com apenas 64M de RAM, ele não vai conseguir fazer uso do Stress, que foi definido para stressar com 64M:
+
+docker container run -d -m 64M toskeira:1.0
+
+root@ubuntulab:/curso/descomplicando-o-docker# docker container run -d -m 64M toskeira:1.0
+WARNING: Your kernel does not support swap limit capabilities or the cgroup is not mounted. Memory limited without swap.
+acca8ef82f581dd1c53a17ae8d44db5707aaad942f2a2537567aac419ebf1ea6
+root@ubuntulab:/curso/descomplicando-o-docker#
+
+root@ubuntulab:/curso/descomplicando-o-docker# docker container stats agitated_wu
+CONTAINER ID   NAME          CPU %     MEM USAGE / LIMIT   MEM %     NET I/O       BLOCK I/O   PIDS
+acca8ef82f58   agitated_wu   0.80%     1.945MiB / 64MiB    3.04%     1.09kB / 0B   0B / 0B     3
+CONTAINER ID   NAME          CPU %     MEM USAGE / LIMIT   MEM %     NET I/O       BLOCK I/O   PIDS
+acca8ef82f58   agitated_wu   0.80%     1.945MiB / 64MiB    3.04%     1.09kB / 0B   0B / 0B     3
+CONTAINER ID   NAME          CPU %     MEM USAGE / LIMIT   MEM %     NET I/O       BLOCK I/O   PIDS
+acca8ef82f58   agitated_wu   100.47%   1.945MiB / 64MiB    3.04%     1.09kB / 0B   0B / 0B     3
+CONTAINER ID   NAME          CPU %     MEM USAGE / LIMIT   MEM %     NET I/O       BLOCK I/O   PIDS
+
+
+
+
+-Subindo a máquina com 256M e com o Stress configurado para forçar mais a máquina:
+
+root@ubuntulab:/curso/descomplicando-o-docker# cat Dockerfile
+FROM debian
+LABEL app="Giropops"
+ENV JEFERSON="LINDO"
+RUN apt-get update && apt-get install -y stress && apt-get clean
+
+CMD stress --cpu 8 --io 4 --vm 2 --vm-bytes 158M
+root@ubuntulab:/curso/descomplicando-o-docker#
+
+docker container run -d -m 256M toskeira:1.0
+
+docker image ls
+docker image build -t toskeira:1.0 .
+docker image ls
+docker container run -d -m 256M toskeira:1.0
+
+root@ubuntulab:/curso/descomplicando-o-docker# docker container ls
+CONTAINER ID   IMAGE          COMMAND                  CREATED         STATUS         PORTS     NAMES
+aa58e4779b96   toskeira:1.0   "/bin/sh -c 'stress …"   6 seconds ago   Up 5 seconds             sharp_greider
+root@ubuntulab:/curso/descomplicando-o-docker#
+
+root@ubuntulab:/curso/descomplicando-o-docker# docker container ls
+CONTAINER ID   IMAGE          COMMAND                  CREATED         STATUS         PORTS     NAMES
+aa58e4779b96   toskeira:1.0   "/bin/sh -c 'stress …"   6 seconds ago   Up 5 seconds             sharp_greider
+root@ubuntulab:/curso/descomplicando-o-docker# docker container stats sharp_greider
+CONTAINER ID   NAME            CPU %     MEM USAGE / LIMIT   MEM %     NET I/O       BLOCK I/O         PIDS
+aa58e4779b96   sharp_greider   4.04%     256MiB / 256MiB     99.99%    1.09kB / 0B   1.56GB / 4.81MB   16
+CONTAINER ID   NAME            CPU %     MEM USAGE / LIMIT   MEM %     NET I/O       BLOCK I/O         PIDS
+aa58e4779b96   sharp_greider   4.04%     256MiB / 256MiB     99.99%    1.09kB / 0B   1.56GB / 4.81MB   16
+CONTAINER ID   NAME            CPU %     MEM USAGE / LIMIT   MEM %     NET I/O       BLOCK I/O         PIDS
+aa58e4779b96   sharp_greider   740.46%   255.7MiB / 256MiB   99.89%    1.09kB / 0B   1.67GB / 5.23MB   16
+

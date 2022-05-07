@@ -1,0 +1,8 @@
+
+
+
+Volumes - Tipo Bind 
+
+mkdir /opt/giropops
+
+docker container run -ti --mount 

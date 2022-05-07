@@ -1,0 +1,53 @@
+
+
+
+Volumes - Tipo Bind 
+
+
+-Criar o diretório que iremos usar na aula:
+mkdir /opt/giropops
+
+
+
+
+
+bind ou volume
+bind é quando o diretório já existe e será montado dentro do container
+
+docker container run -ti --mount type=bind,src=/<diretorio_no_host_local>,dst=/<diretorio_no_container> <imagem_que_sera_utilizada>
+docker container run -ti --mount type=bind,src=/opt/giropops,dst=/giropops debian
+
+root@ubuntulab:/curso/descomplicando-o-docker# docker container run -ti --mount type=bind,src=/opt/giropops,dst=/giropops debian
+Unable to find image 'debian:latest' locally
+latest: Pulling from library/debian
+Digest: sha256:38988bd08d1a5534ae90bea146e199e2b7a8fca334e9a7afe5297a7c919e96ea
+Status: Downloaded newer image for debian:latest
+root@8ab14acbd9d0:/# 
+
+-Criado arquivo de teste dentro do diretorio no container:
+root@301368ee21d8:/giropops# touch teste.txt
+root@301368ee21d8:/giropops# ls
+teste.txt
+root@301368ee21d8:/giropops# pwd
+/giropops
+
+-Arquivo consta no diretório do filesystem do host local:
+
+root@ubuntulab:/curso/descomplicando-o-docker# ls -l /opt/giropops/
+total 0
+-rw-r--r-- 1 root root 0 Aug 26 02:52 teste.txt
+root@ubuntulab:/curso/descomplicando-o-docker#
+
+
+
+
+########################################################################
+############ Alterando o diretorio do container apenas para leitura:
+adicionar "ro" após o nome do diretório:
+
+docker container run -ti --mount type=bind,src=/opt/giropops,dst=/giropops,ro debian
+
+agora ao tentar excluir algo, apresenta erro:
+root@a0a12b287139:/giropops# rm -f teste.txt
+rm: cannot remove 'teste.txt': Read-only file system
+root@a0a12b287139:/giropops#

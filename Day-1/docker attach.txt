@@ -1,0 +1,5 @@
+O attach anexa a entrada/saída do processo principal do contêiner ao terminal.
+O exec executa um novo processo dentro do contêiner.
+Aconselho a utilizar o exec porque geralmente o processo principal não é interativo (só produz saída e não processa entradas)
+
+ 
