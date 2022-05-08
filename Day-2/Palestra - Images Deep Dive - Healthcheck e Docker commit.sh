@@ -7,6 +7,12 @@ Palestra Images Deep Dive, Healthcheck e Docker commit
 
 # Palestra Images Deep Dive, Healthcheck e Docker commit
 
+
+
+# Healthcheck
+
+- É possível adicionar instruções no Dockerfile para que ele possa fazer um Healthcheck, para validar a saúde do Container:
+
 HEALTHCHECK --interval=5s --timeout=3s \
   CMD curl -f http://localhost/ || exit 1
 
